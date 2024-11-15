@@ -383,3 +383,23 @@ void shiftRows(unsigned char *state)
     for (i = 0; i < 4; i++)
         shiftRow(state + i * 4, i);
 }
+void shiftRow(unsigned char *state, unsigned char nbr)
+{
+    int i, j;
+    unsigned char tmp;
+    // each iteration shifts the row to the left by 1
+    for (i = 0; i < nbr; i++)
+    {
+        tmp = state[0];
+        for (j = 0; j < 3; j++)
+            state[j] = state[j + 1];
+        state[3] = tmp;
+    }
+}
+
+void addRoundKey(unsigned char *state, unsigned char *roundKey)
+{
+    int i;
+    for (i = 0; i < 16; i++)
+        state[i] = state[i] ^ roundKey[i];
+}
