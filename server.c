@@ -366,3 +366,20 @@ void expandKey(unsigned char *expandedKey,
         }
     }
 }
+void subBytes(unsigned char *state)
+{
+    int i;
+    /* substitute all the values from the state with the value in the SBox
+     * using the state value as index for the SBox
+     */
+    for (i = 0; i < 16; i++)
+        state[i] = getSBoxValue(state[i]);
+}
+
+void shiftRows(unsigned char *state)
+{
+    int i;
+    // iterate over the 4 rows and call shiftRow() with that row
+    for (i = 0; i < 4; i++)
+        shiftRow(state + i * 4, i);
+}
