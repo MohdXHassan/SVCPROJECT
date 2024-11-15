@@ -263,4 +263,7 @@ aes_encrypt(buffer, ciphertext, key, SIZE_16);
 
   return 0 ;
 }
-
+unsigned char getSBoxValue(unsigned char num)
+{
+    return sbox[num];
+}
