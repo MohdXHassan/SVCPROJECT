@@ -6,4 +6,10 @@
 #include <sys/socket.h> // for sockets
 #include <netinet/in.h> // for Address family 
 
+enum errorCode
+{
+    SUCCESS = 0,
+    ERROR_AES_UNKNOWN_KEYSIZE,
+    ERROR_MEMORY_ALLOCATION_FAILED,
+};
 
