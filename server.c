@@ -271,3 +271,22 @@ unsigned char getSBoxInvert(unsigned char num)
 {
     return rsbox[num];
 }
+
+/* Rijndael's key schedule rotate operation
+ * rotate the word eight bits to the left
+ *
+ * rotate(1d2c3a4f) = 2c3a4f1d
+ *
+ * word is an char array of size 4 (32 bit)
+ */
+void rotate(unsigned char *word)
+{
+    unsigned char c;
+    int i;
+
+    c = word[0];
+    for (i = 0; i < 3; i++)
+        word[i] = word[i + 1];
+    word[3] = c;
+}
+
