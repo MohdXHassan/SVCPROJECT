@@ -267,3 +267,7 @@ unsigned char getSBoxValue(unsigned char num)
 {
     return sbox[num];
 }
+unsigned char getSBoxInvert(unsigned char num)
+{
+    return rsbox[num];
+}
