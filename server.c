@@ -70,3 +70,14 @@ unsigned char getRconValue(unsigned char num);
 // Implementation: Key Schedule Core
 void core(unsigned char *word, int iteration);
 
+
+// Implementation: Key Expansion
+
+enum keySize
+{
+    SIZE_16 = 16,
+    SIZE_24 = 24,
+    SIZE_32 = 32
+};
+
+
