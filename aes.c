@@ -42,3 +42,280 @@ unsigned char getSBoxValue(unsigned char num);
 unsigned char getSBoxInvert(unsigned char num);
 
 // Implementation: Rotate
+void rotate(unsigned char *word);
+
+// Implementation: Rcon
+unsigned char Rcon[255] = {
+    0x8d, 0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36, 0x6c, 0xd8,
+    0xab, 0x4d, 0x9a, 0x2f, 0x5e, 0xbc, 0x63, 0xc6, 0x97, 0x35, 0x6a, 0xd4, 0xb3,
+    0x7d, 0xfa, 0xef, 0xc5, 0x91, 0x39, 0x72, 0xe4, 0xd3, 0xbd, 0x61, 0xc2, 0x9f,
+    0x25, 0x4a, 0x94, 0x33, 0x66, 0xcc, 0x83, 0x1d, 0x3a, 0x74, 0xe8, 0xcb, 0x8d,
+    0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36, 0x6c, 0xd8, 0xab,
+    0x4d, 0x9a, 0x2f, 0x5e, 0xbc, 0x63, 0xc6, 0x97, 0x35, 0x6a, 0xd4, 0xb3, 0x7d,
+    0xfa, 0xef, 0xc5, 0x91, 0x39, 0x72, 0xe4, 0xd3, 0xbd, 0x61, 0xc2, 0x9f, 0x25,
+    0x4a, 0x94, 0x33, 0x66, 0xcc, 0x83, 0x1d, 0x3a, 0x74, 0xe8, 0xcb, 0x8d, 0x01,
+    0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36, 0x6c, 0xd8, 0xab, 0x4d,
+    0x9a, 0x2f, 0x5e, 0xbc, 0x63, 0xc6, 0x97, 0x35, 0x6a, 0xd4, 0xb3, 0x7d, 0xfa,
+    0xef, 0xc5, 0x91, 0x39, 0x72, 0xe4, 0xd3, 0xbd, 0x61, 0xc2, 0x9f, 0x25, 0x4a,
+    0x94, 0x33, 0x66, 0xcc, 0x83, 0x1d, 0x3a, 0x74, 0xe8, 0xcb, 0x8d, 0x01, 0x02,
+    0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36, 0x6c, 0xd8, 0xab, 0x4d, 0x9a,
+    0x2f, 0x5e, 0xbc, 0x63, 0xc6, 0x97, 0x35, 0x6a, 0xd4, 0xb3, 0x7d, 0xfa, 0xef,
+    0xc5, 0x91, 0x39, 0x72, 0xe4, 0xd3, 0xbd, 0x61, 0xc2, 0x9f, 0x25, 0x4a, 0x94,
+    0x33, 0x66, 0xcc, 0x83, 0x1d, 0x3a, 0x74, 0xe8, 0xcb, 0x8d, 0x01, 0x02, 0x04,
+    0x08, 0x10, 0x20, 0x40, 0x80, 0x1b, 0x36, 0x6c, 0xd8, 0xab, 0x4d, 0x9a, 0x2f,
+    0x5e, 0xbc, 0x63, 0xc6, 0x97, 0x35, 0x6a, 0xd4, 0xb3, 0x7d, 0xfa, 0xef, 0xc5,
+    0x91, 0x39, 0x72, 0xe4, 0xd3, 0xbd, 0x61, 0xc2, 0x9f, 0x25, 0x4a, 0x94, 0x33,
+    0x66, 0xcc, 0x83, 0x1d, 0x3a, 0x74, 0xe8, 0xcb};
+
+unsigned char getRconValue(unsigned char num);
+
+// Implementation: Key Schedule Core
+void core(unsigned char *word, int iteration);
+
+// Implementation: Key Expansion
+
+enum keySize
+{
+    SIZE_16 = 16,
+    SIZE_24 = 24,
+    SIZE_32 = 32
+};
+
+void expandKey(unsigned char *expandedKey, unsigned char *key, enum keySize, size_t expandedKeySize);
+
+// Implementation: AES Encryption
+
+// Implementation: subBytes
+void subBytes(unsigned char *state);
+// Implementation: shiftRows
+void shiftRows(unsigned char *state);
+void shiftRow(unsigned char *state, unsigned char nbr);
+// Implementation: addRoundKey
+void addRoundKey(unsigned char *state, unsigned char *roundKey);
+// Implementation: mixColumns
+unsigned char galois_multiplication(unsigned char a, unsigned char b);
+void mixColumns(unsigned char *state);
+void mixColumn(unsigned char *column);
+// Implementation: AES round
+void aes_round(unsigned char *state, unsigned char *roundKey);
+// Implementation: the main AES body
+void createRoundKey(unsigned char *expandedKey, unsigned char *roundKey);
+void aes_main(unsigned char *state, unsigned char *expandedKey, int nbrRounds);
+// Implementation: AES encryption
+char aes_encrypt(unsigned char *input, unsigned char *output, unsigned char *key, enum keySize size);
+// AES Decryption
+void invSubBytes(unsigned char *state);
+void invShiftRows(unsigned char *state);
+void invShiftRow(unsigned char *state, unsigned char nbr);
+void invMixColumns(unsigned char *state);
+void invMixColumn(unsigned char *column);
+void aes_invRound(unsigned char *state, unsigned char *roundKey);
+void aes_invMain(unsigned char *state, unsigned char *expandedKey, int nbrRounds);
+char aes_decrypt(unsigned char *input, unsigned char *output, unsigned char *key, enum keySize size);
+
+int main(int argc, char *argv[])
+{
+    // the expanded keySize
+    int expandedKeySize = 176;
+
+    // the expanded key
+    unsigned char expandedKey[expandedKeySize];
+
+    // the cipher key
+    unsigned char key[16] = {'k', 'k', 'k', 'k', 'e', 'e', 'e', 'e', 'y', 'y', 'y', 'y', '.', '.', '.', '.'};
+
+    // the cipher key size
+    enum keySize size = SIZE_16;
+
+    // the plaintext
+    unsigned char plaintext[16] = {'a', 'b', 'c', 'd', 'e', 'f', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0'};
+
+    // the ciphertext
+    unsigned char ciphertext[16];
+
+    // the decrypted text
+    unsigned char decryptedtext[16];
+
+    int i;
+
+     printf("**************************************************\n");
+    printf("*   Basic implementation of AES algorithm in C   *\n");
+    printf("**************************************************\n");
+
+    printf("\nCipher Key (HEX format):\n");
+
+    for (i = 0; i < 16; i++)
+    {
+        // Print characters in HEX format, 16 chars per line
+        printf("%2.2x%c", key[i], ((i + 1) % 16) ? ' ' : '\n');
+    }
+
+    // Test the Key Expansion
+    expandKey(expandedKey, key, size, expandedKeySize);
+
+    printf("\nExpanded Key (HEX format):\n");
+
+    for (i = 0; i < expandedKeySize; i++)
+    {
+        printf("%2.2x%c", expandedKey[i], ((i + 1) % 16) ? ' ' : '\n');
+    }
+
+    printf("\nPlaintext (HEX format):\n");
+
+    for (i = 0; i < 16; i++)
+    {
+        printf("%2.2x%c", plaintext[i], ((i + 1) % 16) ? ' ' : '\n');
+    }
+
+    // AES Encryption
+    aes_encrypt(plaintext, ciphertext, key, SIZE_16);
+    // make changes so that it takes buffer as input .
+
+    printf("\nCiphertext (HEX format):\n");
+
+    for (i = 0; i < 16; i++)
+    {
+        printf("%2.2x%c", ciphertext[i], ((i + 1) % 16) ? ' ' : '\n');
+    }
+
+    // AES Decryption
+    aes_decrypt(ciphertext, decryptedtext, key, SIZE_16);
+
+    printf("\nDecrypted text (HEX format):\n");
+
+    for (i = 0; i < 16; i++)
+    {
+        // char c =  decryptedtext[i] ;
+        // printf("%c " , c ) ;
+        // changes so that it gives output decrypted buffer /
+        printf("%2.2x%c", decryptedtext[i], ((i + 1) % 16) ? ' ' : '\n');
+    }
+
+    return 0;
+}
+
+unsigned char getSBoxValue(unsigned char num)
+{
+    return sbox[num];
+}
+
+unsigned char getSBoxInvert(unsigned char num)
+{
+    return rsbox[num];
+}
+
+/* Rijndael's key schedule rotate operation
+ * rotate the word eight bits to the left
+ *
+ * rotate(1d2c3a4f) = 2c3a4f1d
+ *
+ * word is an char array of size 4 (32 bit)
+ */
+void rotate(unsigned char *word)
+{
+    unsigned char c;
+    int i;
+
+    c = word[0];
+    for (i = 0; i < 3; i++)
+        word[i] = word[i + 1];
+    word[3] = c;
+}
+
+unsigned char getRconValue(unsigned char num)
+{
+    return Rcon[num];
+}
+
+void core(unsigned char *word, int iteration)
+{
+    int i;
+
+    // rotate the 32-bit word 8 bits to the left
+    rotate(word);
+
+    // apply S-Box substitution on all 4 parts of the 32-bit word
+    for (i = 0; i < 4; ++i)
+    {
+        word[i] = getSBoxValue(word[i]);
+    }
+
+    // XOR the output of the rcon operation with i to the first part (leftmost) only
+    word[0] = word[0] ^ getRconValue(iteration);
+}
+
+/* Rijndael's key expansion
+ * expands an 128,192,256 key into an 176,208,240 bytes key
+ *
+ * expandedKey is a pointer to an char array of large enough size
+ * key is a pointer to a non-expanded key
+ */
+
+void expandKey(unsigned char *expandedKey,
+               unsigned char *key,
+               enum keySize size,
+               size_t expandedKeySize)
+{
+    // current expanded keySize, in bytes
+    int currentSize = 0;
+    int rconIteration = 1;
+    int i;
+    unsigned char t[4] = {0}; // temporary 4-byte variable
+
+    // set the 16,24,32 bytes of the expanded key to the input key
+    for (i = 0; i < size; i++)
+        expandedKey[i] = key[i];
+    currentSize += size;
+
+    while (currentSize < expandedKeySize)
+    {
+        // assign the previous 4 bytes to the temporary value t
+        for (i = 0; i < 4; i++)
+        {
+            t[i] = expandedKey[(currentSize - 4) + i];
+        }
+
+        /* every 16,24,32 bytes we apply the core schedule to t
+         * and increment rconIteration afterwards
+         */
+        if (currentSize % size == 0)
+        {
+            core(t, rconIteration++);
+        }
+
+        // For 256-bit keys, we add an extra sbox to the calculation
+        if (size == SIZE_32 && ((currentSize % size) == 16))
+        {
+            for (i = 0; i < 4; i++)
+                t[i] = getSBoxValue(t[i]);
+        }
+
+        /* We XOR t with the four-byte block 16,24,32 bytes before the new expanded key.
+         * This becomes the next four bytes in the expanded key.
+         */
+        for (i = 0; i < 4; i++)
+        {
+            expandedKey[currentSize] = expandedKey[currentSize - size] ^ t[i];
+            currentSize++;
+        }
+    }
+}
+
+void subBytes(unsigned char *state)
+{
+    int i;
+    /* substitute all the values from the state with the value in the SBox
+     * using the state value as index for the SBox
+     */
+    for (i = 0; i < 16; i++)
+        state[i] = getSBoxValue(state[i]);
+}
+
+void shiftRows(unsigned char *state)
+{
+    int i;
+    // iterate over the 4 rows and call shiftRow() with that row
+    for (i = 0; i < 4; i++)
+        shiftRow(state + i * 4, i);
+}
+
