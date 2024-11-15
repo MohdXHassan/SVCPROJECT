@@ -289,4 +289,31 @@ void rotate(unsigned char *word)
         word[i] = word[i + 1];
     word[3] = c;
 }
+unsigned char getRconValue(unsigned char num)
+{
+    return Rcon[num];
+}
 
+void core(unsigned char *word, int iteration)
+{
+    int i;
+
+    // rotate the 32-bit word 8 bits to the left
+    rotate(word);
+
+    // apply S-Box substitution on all 4 parts of the 32-bit word
+    for (i = 0; i < 4; ++i)
+    {
+        word[i] = getSBoxValue(word[i]);
+    }
+
+    // XOR the output of the rcon operation with i to the first part (leftmost) only
+    word[0] = word[0] ^ getRconValue(iteration);
+}
+
+/* Rijndael's key expansion
+ * expands an 128,192,256 key into an 176,208,240 bytes key
+ *
+ * expandedKey is a pointer to an char array of large enough size
+ * key is a pointer to a non-expanded key
+ */
