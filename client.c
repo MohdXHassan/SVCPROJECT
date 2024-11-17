@@ -124,3 +124,27 @@ void error( const char *msg )
 	perror(msg) ;
 	exit(1) ;
 }
+
+int main(int argc , char *argv[]) {
+       // the expanded keySize
+    int expandedKeySize = 176;
+
+    // the expanded key
+    unsigned char expandedKey[expandedKeySize];
+
+    // the cipher key
+    unsigned char key[16] = {'k', 'k', 'k', 'k', 'e', 'e', 'e', 'e', 'y', 'y', 'y', 'y', '.', '.', '.', '.'};
+
+    // the cipher key size
+    enum keySize size = SIZE_16;
+
+    unsigned char ciphertext[16];
+
+    // the decrypted text
+    unsigned char decryptedtext[255];
+
+    int i;
+
+
+    // Test the Key Expansion
+    expandKey(expandedKey, key, size, expandedKeySize);
