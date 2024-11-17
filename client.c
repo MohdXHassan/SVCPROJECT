@@ -66,3 +66,85 @@ unsigned char Rcon[255] = {
     0x5e, 0xbc, 0x63, 0xc6, 0x97, 0x35, 0x6a, 0xd4, 0xb3, 0x7d, 0xfa, 0xef, 0xc5,
     0x91, 0x39, 0x72, 0xe4, 0xd3, 0xbd, 0x61, 0xc2, 0x9f, 0x25, 0x4a, 0x94, 0x33,
     0x66, 0xcc, 0x83, 0x1d, 0x3a, 0x74, 0xe8, 0xcb};
+
+unsigned char getRconValue(unsigned char num);
+
+
+void core(unsigned char *word, int iteration);
+
+
+enum keySize
+{
+    SIZE_16 = 16,
+    SIZE_24 = 24,
+    SIZE_32 = 32
+};
+
+void expandKey(unsigned char *expandedKey, unsigned char *key, enum keySize, size_t expandedKeySize);
+
+// Implementation: AES Encryption
+
+// Implementation: subBytes
+void subBytes(unsigned char *state);
+// Implementation: shiftRows
+void shiftRows(unsigned char *state);
+void shiftRow(unsigned char *state, unsigned char nbr);
+// Implementation: addRoundKey
+void addRoundKey(unsigned char *state, unsigned char *roundKey);
+// Implementation: mixColumns
+unsigned char galois_multiplication(unsigned char a, unsigned char b);
+void mixColumns(unsigned char *state);
+void mixColumn(unsigned char *column);
+// Implementation: AES round
+void aes_round(unsigned char *state, unsigned char *roundKey);
+// Implementation: the main AES body
+void createRoundKey(unsigned char *expandedKey, unsigned char *roundKey);
+void aes_main(unsigned char *state, unsigned char *expandedKey, int nbrRounds);
+// Implementation: AES encryption
+char aes_encrypt(unsigned char *input, unsigned char *output, unsigned char *key, enum keySize size);
+// AES Decryption
+void invSubBytes(unsigned char *state);
+void invShiftRows(unsigned char *state);
+void invShiftRow(unsigned char *state, unsigned char nbr);
+void invMixColumns(unsigned char *state);
+void invMixColumn(unsigned char *column);
+void aes_invRound(unsigned char *state, unsigned char *roundKey);
+void aes_invMain(unsigned char *state, unsigned char *expandedKey, int nbrRounds);
+char aes_decrypt(unsigned char *input, unsigned char *output, unsigned char *key, enum keySize size);
+
+void xorEncryptDecrypt(char *input, size_t length, const char *key) {
+    size_t keyLen = strlen(key);
+    for (size_t i = 0; i < length; ++i) {
+        input[i] = input[i] ^ key[i % keyLen];
+    }
+}
+// for printing different error messages .
+void error( const char *msg )
+{
+	perror(msg) ;
+	exit(1) ;
+}
+
+int main(int argc , char *argv[]) {
+       // the expanded keySize
+    int expandedKeySize = 176;
+
+    // the expanded key
+    unsigned char expandedKey[expandedKeySize];
+
+    // the cipher key
+    unsigned char key[16] = {'k', 'k', 'k', 'k', 'e', 'e', 'e', 'e', 'y', 'y', 'y', 'y', '.', '.', '.', '.'};
+
+    // the cipher key size
+    enum keySize size = SIZE_16;
+
+    unsigned char ciphertext[16];
+
+    // the decrypted text
+    unsigned char decryptedtext[255];
+
+    int i;
+
+
+    // Test the Key Expansion
+    expandKey(expandedKey, key, size, expandedKeySize);
