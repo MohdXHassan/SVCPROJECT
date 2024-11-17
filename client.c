@@ -112,3 +112,15 @@ void aes_invRound(unsigned char *state, unsigned char *roundKey);
 void aes_invMain(unsigned char *state, unsigned char *expandedKey, int nbrRounds);
 char aes_decrypt(unsigned char *input, unsigned char *output, unsigned char *key, enum keySize size);
 
+void xorEncryptDecrypt(char *input, size_t length, const char *key) {
+    size_t keyLen = strlen(key);
+    for (size_t i = 0; i < length; ++i) {
+        input[i] = input[i] ^ key[i % keyLen];
+    }
+}
+// for printing different error messages .
+void error( const char *msg )
+{
+	perror(msg) ;
+	exit(1) ;
+}
