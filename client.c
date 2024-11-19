@@ -183,3 +183,30 @@ serv_addr.sin_port = htons(portno) ;
 if(connect(sockfd,(struct sockaddr *) &serv_addr,sizeof(serv_addr)) < 0 ){// connecting to the server .
 error("Connection Failed") ;
 }
+while(1){
+    bzero(buffer,255) ;
+    fgets(buffer,255,stdin) ;
+
+
+    // Encrypt the message before sending
+// <<<<<<< HEAD
+    //xorEncryptDecrypt(buffer, strlen(buffer), "secretkey");
+
+    printf("\nCiphertext (HEX format):\n");
+
+    for (i = 0; i < 16; i++)
+    {
+        printf("%2.2x%c", ciphertext[i], ((i + 1) % 16) ? ' ' : '\n');
+    }
+    printf("\nDecrypted text (HEX format):\n");
+    int m = strlen(decryptedtext) ;
+    for (i = 0; i < m  ; i++)
+    {
+        char c =  decryptedtext[i] ;
+        printf("%c " , c ) ;
+
+        // printf("%2.2x%c", decryptedtext[i], ((i + 1) % n) ? ' ' : '\n');
+    }
+    // AES Encryption
+    aes_encrypt(buffer, ciphertext, key, SIZE_16);
+    
