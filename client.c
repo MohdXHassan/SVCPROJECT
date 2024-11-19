@@ -148,3 +148,38 @@ int main(int argc , char *argv[]) {
 
     // Test the Key Expansion
     expandKey(expandedKey, key, size, expandedKeySize);
+
+    if(argc < 3){
+    // either the user has not provided the host name or ipaddress.
+	fprintf(stderr,"usage %s hostname port \n",argv[0]);
+	exit(1) ;
+} 
+// sockfd file descriptor for naming the socket and newsockfd for file descriptor after the connection is established .
+int sockfd ,portno ,n ;
+// buffer for message which we will use in data stream same as server .
+char buffer[255] ;
+// for server and client
+struct sockaddr_in serv_addr ;
+//used to store info about a given host and internet protocol eg:IPV4
+struct hostent *server ;
+
+  
+
+portno = atoi(argv[2]) ;
+sockfd = socket(AF_INET,SOCK_STREAM,0) ;
+if(sockfd<0){
+	error("Error openeing Socket : ") ;
+}
+// since we are not receieving new request so we dont use newsockfd (new socket file descriptor ).
+
+server = gethostbyname(argv[1]) ; // ipaddress of the server 
+if(server == NULL){
+   fprintf(stderr,"Error, No such address \n") ;
+}
+bzero((char *) &serv_addr , sizeof(serv_addr)) ;
+serv_addr.sin_family = AF_INET ;
+bcopy((char *)server->h_addr,(char *) &serv_addr.sin_addr.s_addr,server->h_length) ;// copy n bytes from the hostnet object  to serv_addr transferring informantion 
+serv_addr.sin_port = htons(portno) ;
+if(connect(sockfd,(struct sockaddr *) &serv_addr,sizeof(serv_addr)) < 0 ){// connecting to the server .
+error("Connection Failed") ;
+}
