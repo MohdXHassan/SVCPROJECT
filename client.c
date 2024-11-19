@@ -209,4 +209,27 @@ while(1){
     }
     // AES Encryption
     aes_encrypt(buffer, ciphertext, key, SIZE_16);
-    
+
+       n = write(sockfd,buffer,strlen(buffer)) ;
+    if(n<0){
+        error("Error on writing") ;
+    }
+    bzero(buffer,255) ;
+    n = read(sockfd,buffer,255);
+    if(n<0){
+        error("Error on reading ") ;
+    }
+
+     // Decrypt received message
+   // xorEncryptDecrypt(buffer, n, "secretkey");
+   // AES Decryption
+    aes_decrypt(ciphertext, decryptedtext, key, SIZE_16);
+
+   
+    printf("Server: %s",buffer );
+    int i = strncmp("BYE" , buffer , 3) ;
+    if( i == 0 ) break ;
+}
+close(sockfd) ;
+return 0;
+
